@@ -2,13 +2,12 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../axios";
 import { MyContext } from "../Context/MyContext";
-import image from "../Assets/register.jpg"
+import image from "../Assets/register.jpg";
 import { toast } from "react-toastify";
 
 const Register = () => {
-
-  const { setLogin, setUid, setUser } = useContext(MyContext)
-  const [staff, setStaff] = useState("baseUser")
+  const { setLogin, setUid, setUser } = useContext(MyContext);
+  const [staff, setStaff] = useState("baseUser");
   const [formData, setFormData] = useState({
     email: "",
     password1: "",
@@ -26,7 +25,7 @@ const Register = () => {
   };
 
   const handleSave = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     if (formData.password1 !== formData.password2) {
       toast.error("Passwords do not match");
@@ -34,7 +33,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axiosInstance.post( {
+      const res = await axiosInstance.post(`/authentication/signup/`, {
         email: formData.email,
         username: formData.username,
         first_name: formData.first_name,
@@ -43,17 +42,19 @@ const Register = () => {
       });
       console.log(res);
       console.log("Registered successfully");
-      setLogin(true)
+      setLogin(true);
       localStorage.setItem("access_token", res.data.access);
       localStorage.setItem("refresh_token", res.data.refresh);
       res.data.role === null ? setUser("undefined") : setUser(res.data.role);
-      res.data.role === null ? localStorage.setItem("role", "undefined") : localStorage.setItem("role", res.data.role)
+      res.data.role === null
+        ? localStorage.setItem("role", "undefined")
+        : localStorage.setItem("role", res.data.role);
       axiosInstance.defaults.headers["Authorization"] =
         "JWT " + localStorage.getItem("access_token");
       console.log("Navigating");
-      setUser(res.data.role)
-      const decode = res.data.access
-      setUid(decode.user_id)
+      setUser(res.data.role);
+      const decode = res.data.access;
+      setUid(decode.user_id);
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
@@ -63,21 +64,51 @@ const Register = () => {
   return (
     <div className="grid grid-cols-5">
       <div className="col-span-3">
-        {
-            staff === "baseUser" ? (
-              <img src="https://huddle.day/assets/templates/basic/frontend2/media-uploader/join-us.png" alt="random" className=""/>
-            ) : (
-          <div className="flex justify-center w-full items-center h-[38rem]"><img src={image} alt="random" className="w-5/6"/></div>
-            )
-          }
+        {staff === "baseUser" ? (
+          <img
+            src="https://huddle.day/assets/templates/basic/frontend2/media-uploader/join-us.png"
+            alt="random"
+            className=""
+          />
+        ) : (
+          <div className="flex justify-center w-full items-center h-[38rem]">
+            <img src={image} alt="random" className="w-5/6" />
+          </div>
+        )}
       </div>
       <div className="col-span-2 flex items-center justify-center">
         <div className="flex flex-col w-4/5 justify-center my-24">
           <div className="flex w-full">
-            <button onClick={() => { setStaff("baseUser") }} className={`mx-auto border-2 w-full py-1 rounded-md ${staff !== "baseUser" ? " text-[#FF6B66]" : "bg-[#FF6B66] text-white"}`}>User</button>
-            <button onClick={() => { setStaff("staff") }} className={`mx-auto border-2 w-full py-1 rounded-md bg-[#] ${staff !== "staff" ? " text-[#FF6B66]" : "bg-[#FF6B66] text-white"}`}>Staff</button>
+            <button
+              onClick={() => {
+                setStaff("baseUser");
+              }}
+              className={`mx-auto border-2 w-full py-1 rounded-md ${
+                staff !== "baseUser"
+                  ? " text-[#FF6B66]"
+                  : "bg-[#FF6B66] text-white"
+              }`}
+            >
+              User
+            </button>
+            <button
+              onClick={() => {
+                setStaff("staff");
+              }}
+              className={`mx-auto border-2 w-full py-1 rounded-md bg-[#] ${
+                staff !== "staff"
+                  ? " text-[#FF6B66]"
+                  : "bg-[#FF6B66] text-white"
+              }`}
+            >
+              Staff
+            </button>
           </div>
-          <label htmlFor="username" className="text-[#FF6B66] text-md font-bold" style={{ paddingTop: "13px" }}>
+          <label
+            htmlFor="username"
+            className="text-[#FF6B66] text-md font-bold"
+            style={{ paddingTop: "13px" }}
+          >
             &nbsp;Username
           </label>
           <input
@@ -91,7 +122,11 @@ const Register = () => {
             required
           />
           <div className="form-border"></div>
-          <label htmlFor="first_name" className="text-[#FF6B66] text-md font-bold" style={{ paddingTop: "13px" }}>
+          <label
+            htmlFor="first_name"
+            className="text-[#FF6B66] text-md font-bold"
+            style={{ paddingTop: "13px" }}
+          >
             &nbsp;First name
           </label>
           <input
@@ -105,7 +140,11 @@ const Register = () => {
             required
           />
           <div className="form-border"></div>
-          <label htmlFor="last_name" className="text-[#FF6B66] text-md font-bold" style={{ paddingTop: "13px" }}>
+          <label
+            htmlFor="last_name"
+            className="text-[#FF6B66] text-md font-bold"
+            style={{ paddingTop: "13px" }}
+          >
             &nbsp;Last name
           </label>
           <input
@@ -119,7 +158,11 @@ const Register = () => {
             required
           />
           <div className="form-border"></div>
-          <label htmlFor="email" className="text-[#FF6B66] text-md font-bold" style={{ paddingTop: "13px" }}>
+          <label
+            htmlFor="email"
+            className="text-[#FF6B66] text-md font-bold"
+            style={{ paddingTop: "13px" }}
+          >
             &nbsp;Email
           </label>
           <input
@@ -133,7 +176,11 @@ const Register = () => {
             required
           />
           <div className="form-border"></div>
-          <label htmlFor="password1" className="text-[#FF6B66] text-md font-bold" style={{ paddingTop: "22px" }}>
+          <label
+            htmlFor="password1"
+            className="text-[#FF6B66] text-md font-bold"
+            style={{ paddingTop: "22px" }}
+          >
             &nbsp;Password
           </label>
           <input
@@ -146,7 +193,11 @@ const Register = () => {
             required
           />
           <div className="form-border"></div>
-          <label htmlFor="password2" className="text-[#FF6B66] text-md font-bold" style={{ paddingTop: "22px" }}>
+          <label
+            htmlFor="password2"
+            className="text-[#FF6B66] text-md font-bold"
+            style={{ paddingTop: "22px" }}
+          >
             &nbsp;Confirm Password
           </label>
           <input

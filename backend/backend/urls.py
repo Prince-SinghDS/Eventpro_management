@@ -1,6 +1,5 @@
-
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
@@ -8,8 +7,8 @@ from django.conf import settings
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
-    path('administration/', admin.site.urls),
-    path('admin/', include('AdminStation.urls')),
+    path('admin/', admin.site.urls),
+    path('administration/', include('AdminStation.urls')),
     path('', TemplateView.as_view(template_name="index.html")),
     path('authentication/', include('AuthenticationHub.urls')),
     path('user/', include('UserprofileStation.urls')),
