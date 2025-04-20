@@ -18,7 +18,7 @@ const EmpEvent = () => {
     venue: '',
     domain: '',
     banner: null,
-    committee: '',
+    committee: [],
     reg_fee: '',
     duration: '',
     prize : '',
@@ -99,35 +99,61 @@ const EmpEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formDataToSend = new FormData();
+  
     formDataToSend.append('name', formData.name);
     formDataToSend.append('description', formData.description);
     formDataToSend.append('start_date', formData.start_date);
     formDataToSend.append('end_date', formData.end_date);
     formDataToSend.append('location', formData.location);
     formDataToSend.append('domain', formData.domain);
-    formDataToSend.append('image', formData.image);
-    formDataToSend.append('venue', parseInt(formData.venue));
-    formDataToSend.append('banner', formData.banner);
-    formDataToSend.append('committee', parseInt(formData.committee));
+    
+    // Only append files if they are actually selected
+    if (formData.image) {
+      formDataToSend.append('image', formData.image);
+    }
+    
+    if (formData.banner) {
+      formDataToSend.append('banner', formData.banner);
+    }
+    
     formDataToSend.append('reg_fee', formData.reg_fee);
     formDataToSend.append('duration', formData.duration);
     formDataToSend.append('prize', formData.prize);
-
+  
+    // Make sure venue is an integer
+    if (formData.venue) {
+      formDataToSend.append('venue', parseInt(formData.venue, 10));
+    }
+    
+    // Check if committee is an array before trying to iterate
+    if (Array.isArray(formData.committee)) {
+      formData.committee.forEach((id) => {
+        formDataToSend.append('committee', parseInt(id, 10));
+      });
+    } else if (formData.committee) {
+      // If it's a single value, add it directly
+      formDataToSend.append('committee', parseInt(formData.committee, 10));
+    }
+  
     try {
-      const response = await axiosInstance.post('http://127.0.0.1:8000/event/event_add/', formDataToSend, {
+      const response = await axiosInstance.post('/event/event_add/', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       console.log('Form submitted successfully:', response.data);
       navigate('/role/committee');
     } catch (error) {
       console.error('Error submitting form:', error);
+      // Show error details if available
+      if (error.response && error.response.data) {
+        console.error('Server error details:', error.response.data);
+      }
     }
   };
+  
 
   return (
     <div className="flex items-center h-screen my-4 flex-col">

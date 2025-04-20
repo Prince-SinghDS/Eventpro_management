@@ -31,7 +31,11 @@ function Eventinfo() {
 
     const handleSubmit = () => {
         if (login) {
-            axiosInstance.post(`event/register_event/?event_unique_id=${EventId}`)
+            // Create a FormData object to send data in the request body
+            const formData = new FormData();
+            formData.append('event_unique_id', EventId);
+            
+            axiosInstance.post(`event/register_event/`, formData)
                 .then((res) => {
                     console.log(res?.data);
                     toast.success("Registered successfully!");
@@ -44,10 +48,7 @@ function Eventinfo() {
         else {
             navigate("/login")
         }
-
-
     };
-
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleReadMore = () => {
