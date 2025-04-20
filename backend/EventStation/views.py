@@ -134,7 +134,8 @@ def event_add(request):
 @permission_classes([IsAuthenticated])
 def register_for_event(request):
     try:
-        event_unique_id = request.POST.get('event_unique_id')
+        event_unique_id = request.data.get('event_unique_id')
+        print('event_unique_id', event_unique_id)
         event_unique_id = event_unique_id.replace("-","")
         # event = get_object_or_404(EventDetails, unique_id =event_unique_id)
         event = EventDetails.objects.get(unique_id=event_unique_id)
